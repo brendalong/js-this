@@ -1,7 +1,9 @@
 console.log("hello this");
 
 //Example one: call site and call stack
-var world = "42";
+// try with let and var
+// let keeps code block
+var world = "210";
 
 function sky() {
     // console.log("sky function");
@@ -14,8 +16,8 @@ function ocean() {
 }
 
 function dirt() {
-    var world = "333";
-    // console.log("dirt");
+    let world = "333";
+    // console.log("dirt function");
     console.log("this", this); //execution context
     console.log("this.world", this.world); //refer to execution context
     //THIS holds the execution context, which is always at the original call site.
@@ -27,14 +29,15 @@ sky();
 ///////////////////////////////////////
 
 //Example two: context objects
+//lets make a chicken object
 
-function makeSound() {
-    console.log("this.eggs", this.eggs);
-}
-
-var chickenObj = {
+let chickenObj = {
     eggs: 6,
-    makeSound: makeSound
+    sound: "cluck",
+    makeSound: function makeSound() {
+        console.log("this.sound", this.sound);
+        // console.log("what about sound", sound);
+    }
 };
 
 chickenObj.makeSound();
@@ -48,15 +51,15 @@ chickenObj.makeSound();
 //Example three: more context objects
 
 function foo() {
-    console.log(this.a);
+    console.log("foo", this.a);
 }
 
-var obj2 = {
+let obj2 = {
     a: 42,
     foo: foo
 };
 
-var obj1 = {
+let obj1 = {
     a: 2,
     obj2: obj2
 };
@@ -71,40 +74,64 @@ function storm() {
 	console.log("storm: this.temp", this.temp);
 }
 
-var weatherObj = {
+let weatherObj = {
 	temp: 72,
 	storm: storm
 };
 
-var bar = weatherObj.storm;
 var temp = "global warming";
 
 //test each of these
 weatherObj.storm();
 // storm();
 
+
 /////////////////////////////////////////////
 
 //Example five: losing original binding with callbacks
-
-function foo5() {
-    console.log(this.a);
-}
-
-function doFoo(fn) {
-    fn();
-}
 
 var obj = {
     a: 2,
     foo5: foo5
 };
 
+function foo5() {
+    console.log("foo5", this.a);
+}
+
+function doFoo(objFunction) {
+    objFunction();
+}
+
 var a = "oops, global";
 doFoo(obj.foo5);
-//doFoo() is the original call site that then calls foo. 
+//try this one to get a:2
+// obj.foo5();
+
+//doFoo() is the original call site that then calls foo5. 
 //So doFoo is executed on the window (execution context)
 
-//////////////////////////////////////////////
+
+/////////////////////////////////////////////////
+//
+
+let element = document.getElementsByTagName('div');
+
+for (let i = 0; i < element.length; i++) {
+    element[i].onmouseover = over;
+    element[i].onmouseout = out;
+}
+
+function over() {
+    this.style.backgroundColor = '#cc0000'
+}
+
+function out() {
+    this.style.backgroundColor = '#ffffff'
+}
+
+//////////////////////////////////////////
+
+
 
 
